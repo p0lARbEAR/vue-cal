@@ -873,7 +873,7 @@ export default {
           let timeMinutes = timeAtCursor.getHours() * 60 + timeAtCursor.getMinutes()
           const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
           timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
-          timeAtCursor.setHours(0, timeMinutes, 0, 0)
+          timeAtCursor.setHours(0, timeMinutes, timeMinutes === minutesInADay ? -1 : 0, 0)
         }
 
         // If dragging the bottom of the event.
