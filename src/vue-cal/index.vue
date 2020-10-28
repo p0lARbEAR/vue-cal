@@ -849,8 +849,23 @@ export default {
       // Create an event once, on the first pixel move after threshold is reached.
       if (!dragCreateAnEvent.event) {
         // Start the event with a 1 min duration, this will change as we are dragging.
-        dragCreateAnEvent.event = this.utils.event.createAnEvent(start, 1, { split })
+        if (this.snapToTime) {
+          let timeMinutes = timeAtCursor.getHours() * 60 + timeAtCursor.getMinutes()
+          const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
+          timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
 
+          console.log('in snapToTime', (minutes - timeMinutes), Math.floor((minutes - timeMinutes) / this.snapToTime))
+          if (Math.floor((minutes - timeMinutes) / this.snapToTime) > 0) {
+            dragCreateAnEvent.event = this.utils.event.createAnEvent(start, (minutes - timeMinutes), { split })
+          }
+          else {
+            return
+          }
+        }
+        else {
+          dragCreateAnEvent.event = this.utils.event.createAnEvent(start, 1, { split })
+        }
+        console.log('at eventDragCreation', dragCreateAnEvent)
         // The event creation can be cancelled if user has a onEventCreate function
         // (called from createAnEvent()). If cancelled, cancel the dragCreation.
         if (!dragCreateAnEvent.event) {
